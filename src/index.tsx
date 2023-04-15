@@ -4,6 +4,8 @@ import { HelmetProvider, Helmet } from 'react-helmet-async'
 
 /** Styles */
 import 'bootstrap/dist/css/bootstrap.min.css'
+import 'react-bootstrap-typeahead/css/Typeahead.css'
+import 'react-bootstrap-typeahead/css/Typeahead.bs5.css'
 
 /** Components */
 import { Home } from '@root/components/home'
