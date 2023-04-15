@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+		"target": "esnext",
+		"outDir": "./public/",
+    "module": "es2020",
+    "jsx": "react",
+    "moduleResolution": "node",
+    "strict": true,
+    "noEmit": true,
+    "allowJs": false,
+    "skipLibCheck": true,
+    "isolatedModules": false,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "noImplicitAny": false,
+    "baseUrl": "./src",
+    "paths": {
+      "@models/*": ["models/*"],
+      "@root/*": ["*"],
+    }
+  }
+}
