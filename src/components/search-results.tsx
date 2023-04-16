@@ -1,9 +1,11 @@
 import React from 'react'
 import ReactPaginate from 'react-paginate'
+import { LazyLoadImage } from 'react-lazy-load-image-component'
 import {
   FaRegSadCry,
   FaForward,
-  FaBackward
+  FaBackward,
+  FaGithub
 } from 'react-icons/fa'
 
 /** Models */
@@ -54,13 +56,32 @@ export const SearchResults = (props: Props): JSX.Element | null => {
             ? results.items.map((githubUser: GithubUser) => (
               <div key={githubUser.id} className="col-6 col-sm-3 mb-2">
                 <div className="card">
-                  <div className="card-header">
-                    <a
-                      href={githubUser.html_url}
-                      className="text-decoration-none"
-                    >
-                      {githubUser.login}
-                    </a>
+                  <div className="card-header row">
+                    <div className="col-10">
+                      <span className="align-middle fw-bold">{githubUser.login}</span>
+                    </div>
+                    <div className="col-2 d-flex flex-row-reverse">
+                      <a
+                        href={githubUser.html_url}
+                        className="text-decoration-none"
+                        target="_blank"
+                        rel="noreferrer"
+                        title={`Open ${githubUser.login} Github profile`}
+                      >
+                        <FaGithub />
+                      </a>
+                    </div>
+                  </div>
+                  <div className="card-body row">
+                    <div className="col-5">
+                      <LazyLoadImage
+                        alt={githubUser.login}
+                        src={`${githubUser.avatar_url}`}
+                        className="me-2 img-fluid img-thumbnail"
+                        threshold={0}
+                        effect="blur"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>

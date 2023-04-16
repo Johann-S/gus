@@ -1,5 +1,6 @@
 import React, { type KeyboardEvent, useState } from 'react'
 import { Typeahead as TypeaheadLib } from 'react-bootstrap-typeahead'
+import { LazyLoadImage } from 'react-lazy-load-image-component'
 import { FcSearch } from 'react-icons/fc'
 
 /** Root */
@@ -34,16 +35,14 @@ export const Typeahead = (props: Props): JSX.Element => {
               onInputChange={(text: string) => { setSearchStr(text) }}
               renderMenuItemChildren={(option: any) => (
                 <div key={option.id}>
-                  <img
+                  <LazyLoadImage
                     alt={option.login}
-                    src={option.avatar_url}
-                    style={{
-                      height: '24px',
-                      marginRight: '10px',
-                      width: '24px'
-                    }}
+                    src={`${option.avatar_url as string}&s=24`}
+                    className="me-2"
+                    threshold={0}
+                    effect="blur"
                   />
-                  <span>{option.login}</span>
+                  <span className="align-middle">{option.login}</span>
                 </div>
               )}
             />
