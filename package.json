@@ -5,11 +5,10 @@
   "private": "true",
   "scripts": {
     "start": "webpack serve --open --mode development",
+    "prebuild": "node ./scripts/create-env.js",
     "build": "webpack --mode production",
     "lint": "eslint src/**/*.{js,jsx,mjs,cjs,ts,tsx}",
-    "test": "npm run lint && npm run build",
-    "predeploy": "node ./scripts/create-env.js",
-    "deploy": "npm run build"
+    "test": "npm run lint && npm run build"
   },
   "repository": {
     "type": "git",
