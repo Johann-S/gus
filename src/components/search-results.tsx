@@ -11,7 +11,7 @@ import { type GithubUser } from '@models/github-user.model'
 import { type UserPagination } from '@models/user-pagination.model'
 
 /** Root */
-import { sigCacheResults } from '@root/signals/cache-results.signal'
+import { sigCacheSearch } from '@root/signals/cache-search.signal'
 import { BlockLoader } from './block-loader'
 import { UserCard } from './user-card'
 
@@ -24,7 +24,7 @@ interface Props {
 export const SearchResults = (props: Props): JSX.Element | null => {
   const { results, isLoading, search } = props
 
-  if (!sigCacheResults.value.length) {
+  if (!sigCacheSearch.value.length) {
     return null
   }
 
@@ -69,7 +69,7 @@ export const SearchResults = (props: Props): JSX.Element | null => {
         }
       </div>
       <div className="row">
-        <nav className="col-12 mt-2" aria-label="Github user pagination">
+        <nav className="col-12 mt-2 d-flex justify-content-center" aria-label="Github user pagination">
           <ReactPaginate
             forcePage={results.totalPages > 0 ? results.currentPage - 1 : -1}
             pageCount={results.totalPages}

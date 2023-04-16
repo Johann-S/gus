@@ -12,7 +12,6 @@ import { type UserPagination } from '@models/user-pagination.model'
 
 /** Signals */
 import { updateCacheSearch } from '@root/signals/cache-search.signal'
-import { updateCacheResults } from '@root/signals/cache-results.signal'
 
 export const Search = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState(false)
@@ -30,7 +29,6 @@ export const Search = (): JSX.Element => {
 
     if (result) {
       updateCacheSearch(str)
-      updateCacheResults(result.items)
       setResults(result)
     }
 

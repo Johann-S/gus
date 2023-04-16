@@ -1,10 +1,10 @@
 import React, { type KeyboardEvent, useState } from 'react'
 import { Typeahead as TypeaheadLib } from 'react-bootstrap-typeahead'
-import { LazyLoadImage } from 'react-lazy-load-image-component'
 import { FcSearch } from 'react-icons/fc'
+import { FaHistory } from 'react-icons/fa'
 
 /** Root */
-import { sigCacheResults } from '@root/signals/cache-results.signal'
+import { sigCacheSearch } from '@root/signals/cache-search.signal'
 
 interface Props {
   isLoading: boolean
@@ -25,7 +25,7 @@ export const Typeahead = (props: Props): JSX.Element => {
               isLoading={isLoading}
               minLength={2}
               placeholder="Search for a Github user, e.g. Johann-S"
-              options={sigCacheResults.value}
+              options={sigCacheSearch.value}
               labelKey="login"
               onKeyDown={(ev: KeyboardEvent<HTMLInputElement>) => {
                 if (ev.key === 'Enter') {
@@ -34,15 +34,13 @@ export const Typeahead = (props: Props): JSX.Element => {
               }}
               onInputChange={(text: string) => { setSearchStr(text) }}
               renderMenuItemChildren={(option: any) => (
-                <div key={option.id}>
-                  <LazyLoadImage
-                    alt={option.login}
-                    src={`${option.avatar_url as string}&s=24`}
-                    className="me-2"
-                    threshold={0}
-                    effect="blur"
-                  />
-                  <span className="align-middle">{option.login}</span>
+                <div
+                  key={`key-${option as string}`}
+                  onClick={() => { setSearchStr(option) }}
+                  className="text-muted"
+                >
+                  <FaHistory />
+                  <span className="align-middle ms-2">{option}</span>
                 </div>
               )}
             />
