@@ -1,5 +1,8 @@
 # GUS
 
+[![Node.js CI](https://github.com/Johann-S/gus/actions/workflows/node.js.yml/badge.svg?branch=main)](https://github.com/Johann-S/gus/actions/workflows/node.js.yml)
+
+
 Github User Search (GUS), available here: https://gus-johann-s.netlify.app/
 
 ## Highlights
