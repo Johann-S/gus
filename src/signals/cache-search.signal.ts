@@ -9,10 +9,8 @@ export const updateCacheSearch = (lastSearch: string): void => {
     const indexSearch = updateArr.indexOf(lastSearch)
 
     updateArr.splice(indexSearch, 1)
-    updateArr.unshift(lastSearch)
-  } else {
-    updateArr.push(lastSearch)
   }
 
+  updateArr.push(lastSearch)
   sigCacheSearch.value = updateArr
 }

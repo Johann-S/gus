@@ -8,6 +8,7 @@ import { ghApiVersion, ghBaseUrl, ghToken } from '@root/const'
 import { type GithubResultSearch } from '@models/github-result.search.model'
 import { type UserPagination } from '@models/user-pagination.model'
 import { type GithubUserProfile } from '@models/github-user-profile.model'
+import { FilterResults } from '@models/filter-results.enum'
 
 const githubClient = axios.create({
   baseURL: ghBaseUrl,
@@ -54,15 +55,16 @@ const buildUserPagination = (
 
 export const ghUserSearch = async (
   search: string,
-  page = 1,
-  resultPerPage = 50
+  page: number,
+  resultPerPage: number,
+  sort: string
 ): Promise<UserPagination | null> => {
   try {
     const params = {
       page,
       q: search,
       per_page: resultPerPage,
-      sort: 'followers'
+      sort: sort === FilterResults.BestMatch ? undefined : sort
     }
     const stringyfiedParams = JSON.stringify(params)
 

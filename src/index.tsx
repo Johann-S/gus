@@ -7,6 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'react-bootstrap-typeahead/css/Typeahead.css'
 import 'react-bootstrap-typeahead/css/Typeahead.bs5.css'
 import 'react-lazy-load-image-component/src/effects/blur.css'
+import './css/util.css'
 
 /** Components */
 import { Home } from '@root/components/home'

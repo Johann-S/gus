@@ -9,23 +9,26 @@ import { SearchResults } from '@root/components/search-results'
 
 /** Models */
 import { type UserPagination } from '@models/user-pagination.model'
+import { FilterResults } from '@models/filter-results.enum'
 
 /** Signals */
-import { updateCacheSearch } from '@root/signals/cache-search.signal'
+import { sigCacheSearch, updateCacheSearch } from '@root/signals/cache-search.signal'
 
 export const Search = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState(false)
-  const [totalDisplay] = useState(50)
+  const [totalDisplay, setTotalDisplay] = useState(20)
+  const [filterResults, setFilterResults] = useState(FilterResults.BestMatch as string)
   const [results, setResults] = useState(
     { items: [] } as unknown as UserPagination
   )
   const searchFn = async (
     str: string,
     page: number,
-    totalItems = totalDisplay
+    totalItems = totalDisplay,
+    filter = filterResults
   ): Promise<UserPagination | null> => {
     setIsLoading(true)
-    const result = await ghUserSearch(str, page, totalItems)
+    const result = await ghUserSearch(str, page, totalItems, filter)
 
     if (result) {
       updateCacheSearch(str)
@@ -46,7 +49,17 @@ export const Search = (): JSX.Element => {
       <SearchResults
         isLoading={isLoading}
         results={results}
+        totalDisplay={totalDisplay}
+        filterResults={filterResults}
         search={(searchStr: string, page: number) => { void searchFn(searchStr, page) }}
+        setTotalDisplay={(total: number) => {
+          setTotalDisplay(total)
+          void searchFn([...sigCacheSearch.value].pop() as string, 1, total)
+        }}
+        setFilterResults={(newFilter: string) => {
+          setFilterResults(newFilter)
+          void searchFn([...sigCacheSearch.value].pop() as string, 1, totalDisplay, newFilter)
+        }}
       />
     </div>
   )
