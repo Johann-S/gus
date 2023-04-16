@@ -142,6 +142,7 @@ module.exports = async (env, args) => {
           /^visually-/,
           /^rbt-aux/,
           /^rbt-loader/,
+          /^spinner-border/,
           /^lazy-load-image-/
         ]
       })
