@@ -4,7 +4,7 @@ import React from 'react'
 import { Navbar } from './navbar'
 import { Search } from './search'
 
-export const Home = (): JSX.Element => {
+const Home = (): JSX.Element => {
   return (
     <>
       <Navbar />
@@ -12,3 +12,5 @@ export const Home = (): JSX.Element => {
     </>
   )
 }
+
+export default Home

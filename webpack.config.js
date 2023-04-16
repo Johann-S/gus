@@ -107,7 +107,10 @@ module.exports = async (env, args) => {
       }),
       new DefinePlugin(envKeys),
       new NodePolyfillPlugin()
-    ]
+    ],
+    performance: {
+      maxEntrypointSize: 262000
+    }
   }
 
   if (!prod) {
