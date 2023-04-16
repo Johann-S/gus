@@ -3,36 +3,16 @@ import { Typeahead as TypeaheadLib } from 'react-bootstrap-typeahead'
 import { FcSearch } from 'react-icons/fc'
 
 /** Root */
-import { sigCacheResults, updateCacheResults } from '@root/signals/cache-results.signal'
-import { updateCacheSearch } from '@root/signals/cache-search.signal'
-import { ghUserSearch } from '@root/gh-helper'
-
-/** Models */
-import { type GithubResultSearch } from '@models/github-result.search.model'
+import { sigCacheResults } from '@root/signals/cache-results.signal'
 
 interface Props {
   isLoading: boolean
-  setIsLoading: (loading: boolean) => void
-  setResults: (results: GithubResultSearch) => void
+  search: (searchStr: string, page: number) => void
 }
 
 export const Typeahead = (props: Props): JSX.Element => {
-  const { isLoading, setIsLoading, setResults } = props
+  const { isLoading, search } = props
   const [searchStr, setSearchStr] = useState('')
-  const searchFn = async (str: string): Promise<GithubResultSearch | null> => {
-    setIsLoading(true)
-    const result = await ghUserSearch(str)
-
-    if (result) {
-      updateCacheSearch(str)
-      updateCacheResults(result.items)
-      setResults(result)
-    }
-
-    setIsLoading(false)
-
-    return result
-  }
 
   return (
     <section className="row d-flex justify-content-center">
@@ -48,7 +28,7 @@ export const Typeahead = (props: Props): JSX.Element => {
               labelKey="login"
               onKeyDown={(ev: KeyboardEvent<HTMLInputElement>) => {
                 if (ev.key === 'Enter') {
-                  void searchFn(searchStr)
+                  search(searchStr, 1)
                 }
               }}
               onInputChange={(text: string) => { setSearchStr(text) }}
@@ -72,7 +52,7 @@ export const Typeahead = (props: Props): JSX.Element => {
             <button
               type="button"
               className="btn btn-light"
-              onClick={() => { void searchFn(searchStr) }}
+              onClick={() => { search(searchStr, 1) }}
               disabled={isLoading}
             >
               <FcSearch />
