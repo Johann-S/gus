@@ -7,6 +7,7 @@ import { ghApiVersion, ghBaseUrl, ghToken } from '@root/const'
 /** Models */
 import { type GithubResultSearch } from '@models/github-result.search.model'
 import { type UserPagination } from '@models/user-pagination.model'
+import { type GithubUserProfile } from '@models/github-user-profile.model'
 
 const githubClient = axios.create({
   baseURL: ghBaseUrl,
@@ -60,7 +61,8 @@ export const ghUserSearch = async (
     const params = {
       page,
       q: search,
-      per_page: resultPerPage
+      per_page: resultPerPage,
+      sort: 'followers'
     }
     const stringyfiedParams = JSON.stringify(params)
 
@@ -83,6 +85,22 @@ export const ghUserSearch = async (
     sessionStorage.setItem(stringyfiedParams, JSON.stringify(pagination))
 
     return pagination
+  } catch (error) {
+    return null
+  }
+}
+
+export const ghUserProfile = async (name: string): Promise<GithubUserProfile | null> => {
+  try {
+    if (sessionStorage.getItem(name)) {
+      return JSON.parse(sessionStorage.getItem(name) as string)
+    }
+
+    const { data } = await githubClient.get<GithubUserProfile>(`/users/${name}`)
+
+    sessionStorage.setItem(name, JSON.stringify(data))
+
+    return data
   } catch (error) {
     return null
   }

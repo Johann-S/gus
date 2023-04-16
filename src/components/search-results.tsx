@@ -1,11 +1,9 @@
 import React from 'react'
 import ReactPaginate from 'react-paginate'
-import { LazyLoadImage } from 'react-lazy-load-image-component'
 import {
   FaRegSadCry,
   FaForward,
-  FaBackward,
-  FaGithub
+  FaBackward
 } from 'react-icons/fa'
 
 /** Models */
@@ -14,6 +12,8 @@ import { type UserPagination } from '@models/user-pagination.model'
 
 /** Root */
 import { sigCacheResults } from '@root/signals/cache-results.signal'
+import { BlockLoader } from './block-loader'
+import { UserCard } from './user-card'
 
 interface Props {
   isLoading: boolean
@@ -22,10 +22,19 @@ interface Props {
 }
 
 export const SearchResults = (props: Props): JSX.Element | null => {
-  const { results, search } = props
+  const { results, isLoading, search } = props
 
   if (!sigCacheResults.value.length) {
     return null
+  }
+
+  if (isLoading) {
+    return (
+      <section className="mt-5">
+        <hr />
+        <BlockLoader />
+      </section>
+    )
   }
 
   return (
@@ -43,9 +52,9 @@ export const SearchResults = (props: Props): JSX.Element | null => {
                 </div>
               )
             : (
-                <div>
-                  <span>Found nothing</span>
-                  <FaRegSadCry />
+                <div className="text-center">
+                  <span className="align-middle me-2">Found nothing</span>
+                  <FaRegSadCry className="text-warning" />
                 </div>
               )
         }
@@ -54,37 +63,7 @@ export const SearchResults = (props: Props): JSX.Element | null => {
         {
           results.items.length
             ? results.items.map((githubUser: GithubUser) => (
-              <div key={githubUser.id} className="col-6 col-sm-3 mb-2">
-                <div className="card">
-                  <div className="card-header row">
-                    <div className="col-10">
-                      <span className="align-middle fw-bold">{githubUser.login}</span>
-                    </div>
-                    <div className="col-2 d-flex flex-row-reverse">
-                      <a
-                        href={githubUser.html_url}
-                        className="text-decoration-none"
-                        target="_blank"
-                        rel="noreferrer"
-                        title={`Open ${githubUser.login} Github profile`}
-                      >
-                        <FaGithub />
-                      </a>
-                    </div>
-                  </div>
-                  <div className="card-body row">
-                    <div className="col-5">
-                      <LazyLoadImage
-                        alt={githubUser.login}
-                        src={githubUser.avatar_url}
-                        className="me-2 img-fluid img-thumbnail"
-                        threshold={0}
-                        effect="blur"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <UserCard key={githubUser.id} user={githubUser} />
             ))
             : null
         }

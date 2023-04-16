@@ -134,11 +134,8 @@ module.exports = async (env, args) => {
           ...glob.sync(`${paths.src}/**/*.tsx`)
         ],
         safelist: [
-          /^spinner-/,
           /^dropdown/,
           /^form/,
-          /^svg/,
-          /^spinner-/,
           /^visually-/,
           /^rbt-aux/,
           /^rbt-loader/,
