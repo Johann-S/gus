@@ -1,40 +1,39 @@
 /* eslint @typescript-eslint/no-var-requires: 0 */
-const path = require('path');
-const glob = require('glob-all');
-const HtmlWebPackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const { PurgeCSSPlugin } = require('purgecss-webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const dotenv = require('dotenv');
-const { DefinePlugin } = require('webpack');
-const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
-const ReactRefreshPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+const path = require('path')
+const glob = require('glob-all')
+const HtmlWebPackPlugin = require('html-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const { PurgeCSSPlugin } = require('purgecss-webpack-plugin')
+const TerserPlugin = require('terser-webpack-plugin')
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const dotenv = require('dotenv')
+const { DefinePlugin } = require('webpack')
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
+const ReactRefreshPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 
 module.exports = async (env, args) => {
-  const prod = args.mode === 'production';
-  const currentPath = path.join(__dirname);
+  const prod = args.mode === 'production'
+  const currentPath = path.join(__dirname)
   const dotEnvParsed = dotenv.config({
-    path: `${currentPath}/.env`,
-  }).parsed;
+    path: `${currentPath}/.env`
+  }).parsed
 
   const paths = {
     src: path.resolve(__dirname, 'src/'),
-    index: path.resolve(__dirname, 'src/index.html'),
-  };
+    index: path.resolve(__dirname, 'src/index.html')
+  }
 
   const envKeys = Object.keys(dotEnvParsed)
     .reduce((prev, next) => ({
       ...prev,
-      [`process.env.${next}`]: JSON.stringify(dotEnvParsed[next]),
-    }), {});
-
+      [`process.env.${next}`]: JSON.stringify(dotEnvParsed[next])
+    }), {})
 
   const htmlWebPackPluginConfig = {
     template: path.resolve(__dirname, 'src/index.html'),
-    filename: path.resolve(__dirname, 'public/index.html'),
-  };
+    filename: path.resolve(__dirname, 'public/index.html')
+  }
 
   if (prod) {
     htmlWebPackPluginConfig.minify = {
@@ -47,8 +46,8 @@ module.exports = async (env, args) => {
       keepClosingSlash: true,
       minifyJS: true,
       minifyCSS: true,
-      minifyURLs: true,
-    };
+      minifyURLs: true
+    }
   }
 
   const config = {
@@ -56,14 +55,14 @@ module.exports = async (env, args) => {
     output: {
       filename: 'bundle.js',
       path: path.resolve(__dirname, 'public'),
-      publicPath: '/public/',
+      publicPath: '/public/'
     },
     resolve: {
       extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
       alias: {
         '@models': path.resolve(__dirname, 'src/models'),
-        '@root': path.resolve(__dirname, 'src/'),
-      },
+        '@root': path.resolve(__dirname, 'src/')
+      }
     },
     module: {
       rules: [
@@ -73,76 +72,80 @@ module.exports = async (env, args) => {
           use: {
             loader: 'babel-loader',
             options: {
-              plugins: [!prod && require.resolve('react-refresh/babel')].filter(Boolean),
-            },
-          },
+              plugins: [!prod && require.resolve('react-refresh/babel')].filter(Boolean)
+            }
+          }
         },
         {
           test: /\.css$/,
           use: [
             {
               loader: MiniCssExtractPlugin.loader,
-              options: {},
+              options: {}
             },
             'css-loader',
-            'postcss-loader',
-          ],
+            'postcss-loader'
+          ]
         },
         {
           test: /\.(png|svg|jpg|gif)$/,
-          type: 'asset/resource',
+          type: 'asset/resource'
         },
         {
           test: /\.(woff|woff2|eot|ttf|otf)$/,
-          type: 'asset/resource',
-        },
-      ],
+          type: 'asset/resource'
+        }
+      ]
     },
     plugins: [
       new CleanWebpackPlugin({
-        cleanOnceBeforeBuildPatterns: ['**/*'],
+        cleanOnceBeforeBuildPatterns: ['**/*']
       }),
       new HtmlWebPackPlugin(htmlWebPackPluginConfig),
       new MiniCssExtractPlugin({
-        chunkFilename: '[name].css',
+        chunkFilename: '[name].css'
       }),
       new DefinePlugin(envKeys),
-      new NodePolyfillPlugin(),
-    ],
-  };
+      new NodePolyfillPlugin()
+    ]
+  }
 
   if (!prod) {
-    config.devtool = 'source-map';
+    config.devtool = 'source-map'
     config.devServer = {
       hot: true,
       historyApiFallback: true,
       devMiddleware: {
-        writeToDisk: true,
-      },
-    };
-    config.plugins.push(new ReactRefreshPlugin());
+        writeToDisk: true
+      }
+    }
+    config.plugins.push(new ReactRefreshPlugin())
   } else {
     config.output = {
       ...config.output,
       filename: '[name].[contenthash:8].js',
       chunkFilename: '[name].[contenthash:8].chunk.js',
-      publicPath: '/',
-    };
+      publicPath: '/'
+    }
     config.plugins.push(
       new PurgeCSSPlugin({
         paths: [
           paths.index,
-          ...glob.sync(`${paths.src}/**/*.tsx`),
+          ...glob.sync(`${paths.src}/**/*.tsx`)
         ],
         safelist: [
-          /^modal/,
-          /^show/,
           /^spinner-/,
-          /^collap/,
+          /^dropdown/,
+          /^form/,
           /^svg/,
-        ],
-      }),
-    );
+          /^spinner-/,
+          /^visually-/,
+          /^rbt-aux/,
+          /^rbt-loader/,
+          /^lazy-load-image-/
+        ]
+      })
+    )
 
     config.optimization = {
       minimize: true,
@@ -152,25 +155,25 @@ module.exports = async (env, args) => {
           extractComments: false,
           terserOptions: {
             compress: {
-              typeofs: false,
+              typeofs: false
             },
             output: {
-              comments: false,
+              comments: false
             },
-            mangle: true,
-          },
+            mangle: true
+          }
         }),
-        new CssMinimizerPlugin(),
+        new CssMinimizerPlugin()
       ],
       splitChunks: {
         chunks: 'all',
-        name: false,
+        name: false
       },
       runtimeChunk: {
-        name: (entryPoint) => `runtime-${entryPoint.name}`,
-      },
-    };
+        name: (entryPoint) => `runtime-${entryPoint.name}`
+      }
+    }
   }
 
-  return config;
-};
+  return config
+}

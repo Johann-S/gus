@@ -76,7 +76,7 @@ export const SearchResults = (props: Props): JSX.Element | null => {
                     <div className="col-5">
                       <LazyLoadImage
                         alt={githubUser.login}
-                        src={`${githubUser.avatar_url}`}
+                        src={githubUser.avatar_url}
                         className="me-2 img-fluid img-thumbnail"
                         threshold={0}
                         effect="blur"
