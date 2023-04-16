@@ -1,5 +1,5 @@
 import axios from 'axios'
-import parseLinkHeader, { type Link } from 'parse-link-header'
+import parseLinkHeader from 'parse-link-header'
 
 /** Root */
 import { ghApiVersion, ghBaseUrl, ghToken } from '@root/const'
@@ -22,25 +22,32 @@ const buildUserPagination = (
   data: GithubResultSearch, link: string | null
 ): UserPagination => {
   const paginationParsed = parseLinkHeader(link)
+  const defaultPagination = {
+    search,
+    currentPage,
+    totalItems: data.total_count,
+    items: data.items
+  }
 
   if (!paginationParsed) {
     return {
-      search,
-      currentPage,
-      totalItems: data.total_count,
-      totalPages: 1,
-      items: data.items
+      ...defaultPagination,
+      totalPages: 1
     }
   }
 
   const last = paginationParsed.last
 
+  if (!last) {
+    return {
+      ...defaultPagination,
+      totalPages: currentPage
+    }
+  }
+
   return {
-    search,
-    currentPage,
-    totalItems: data.total_count,
-    totalPages: Number((last as Link).page),
-    items: data.items
+    ...defaultPagination,
+    totalPages: Number(last.page)
   }
 }
 
@@ -55,6 +62,12 @@ export const ghUserSearch = async (
       q: search,
       per_page: resultPerPage
     }
+    const stringyfiedParams = JSON.stringify(params)
+
+    if (sessionStorage.getItem(stringyfiedParams)) {
+      return JSON.parse(sessionStorage.getItem(stringyfiedParams) as string)
+    }
+
     const { data, headers } = await githubClient.get<GithubResultSearch>(
       '/search/users',
       { params }
@@ -67,7 +80,7 @@ export const ghUserSearch = async (
       headers.link
     )
 
-    sessionStorage.setItem(JSON.stringify(params), JSON.stringify(pagination))
+    sessionStorage.setItem(stringyfiedParams, JSON.stringify(pagination))
 
     return pagination
   } catch (error) {
