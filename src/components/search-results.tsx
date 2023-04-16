@@ -67,9 +67,9 @@ export const SearchResults = (props: Props): JSX.Element | null => {
   return (
     <section className="mt-5">
       <hr />
-      <div className="row">
-        <div className="col-10">
-          <h4 className="mb-4">
+      <div className="row mb-4">
+        <div className="col-12 col-sm-9 col-md-8">
+          <h4>
             <div>
               <span className="me-1">Found</span>
               <span className="text-success me-1">{results.totalItems}</span>
@@ -78,7 +78,7 @@ export const SearchResults = (props: Props): JSX.Element | null => {
             </div>
           </h4>
         </div>
-        <div className="col-2 d-flex flex-row-reverse mb-2">
+        <div className="col-12 col-sm-3 col-md-4 d-flex flex-row-reverse">
           <select
             className="form-select form-select-sm small-select-width"
             onChange={(ev) => { setTotalDisplay(Number(ev.target.value)) }}

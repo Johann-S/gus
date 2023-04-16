@@ -104,7 +104,7 @@ export const UserCard = ({ user }: Props): JSX.Element => {
   )
 
   return (
-    <div key={user.id} className="col-6 col-sm-3 mb-2">
+    <div key={user.id} className="col-12 col-sm-6 col-xl-4 col-xxl-3 mb-2">
       <div className="card container-fluid h-100">
         <div className="card-header row">
           <div className="col-10">
