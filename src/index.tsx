@@ -21,7 +21,8 @@ root.render(
     <HelmetProvider>
       <Helmet
         htmlAttributes={{ lang: 'en' }}
-        defaultTitle="GUS - Github user search"
+        defaultTitle="GUS - Github User Search"
+        bodyAttributes={{ class: 'h-100' }}
       >
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />

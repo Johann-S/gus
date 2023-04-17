@@ -17,8 +17,12 @@ import { type GithubResultSearch } from '@models/github-result.search.model'
 import { type UserPagination } from '@models/user-pagination.model'
 import { type GithubUser } from '@models/github-user.model'
 import { type GithubUserRest } from '@models/github-user-rest.model'
-import { FilterResults } from '@models/filter-results.enum'
 import { type RawUser, type ResultRawUserNodes } from '@models/result-raw-user-nodes.model'
+import { type RateLimit } from '@models/rate-limit.model'
+import { FilterResults } from '@models/filter-results.enum'
+
+/** Signals */
+import { sigRateLimit } from '@root/signals/rate-limit.signal'
 
 const githubClient = axios.create({
   baseURL: ghRestUrl,
@@ -136,9 +140,22 @@ export const ghUserSearch = async (
     )
 
     sessionStorage.setItem(stringyfiedParams, JSON.stringify(pagination))
+    void ghRateLimit()
 
     return pagination
   } catch (error) {
+    console.error(error)
+
     return null
+  }
+}
+
+export const ghRateLimit = async (): Promise<void> => {
+  try {
+    const { data } = await githubClient.get<RateLimit>('/rate_limit')
+
+    sigRateLimit.value = data
+  } catch (error) {
+    console.log(error)
   }
 }
