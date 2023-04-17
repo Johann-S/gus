@@ -39,7 +39,6 @@ const ghGraphQlClient = new ApolloClient({
 const buildUserPagination = (
   search: string,
   currentPage: number,
-  resultPerPage: number,
   items: GithubUser[],
   totalItems: number,
   link: string | null
@@ -70,7 +69,7 @@ const buildUserPagination = (
 
   return {
     ...defaultPagination,
-    totalPages: Math.ceil(defaultPagination.totalItems / resultPerPage)
+    totalPages: Number(last.page)
   }
 }
 
@@ -131,7 +130,6 @@ export const ghUserSearch = async (
     const pagination = buildUserPagination(
       search,
       page,
-      resultPerPage,
       userList,
       data.total_count,
       headers.link
