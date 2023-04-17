@@ -5,9 +5,10 @@ import {
   FaForward,
   FaBackward
 } from 'react-icons/fa'
+import { MdWarningAmber } from 'react-icons/md'
 
 /** Models */
-import { type GithubUser } from '@models/github-user-rest.model'
+import { type GithubUser } from '@models/github-user.model'
 import { type UserPagination } from '@models/user-pagination.model'
 import { FilterResults } from '@models/filter-results.enum'
 
@@ -15,6 +16,7 @@ import { FilterResults } from '@models/filter-results.enum'
 import { sigCacheSearch } from '@root/signals/cache-search.signal'
 import { BlockLoader } from '@root/components/block-loader'
 import { UserCard } from '@root/components/user-card'
+import { ghMaxResults } from '@root/const'
 
 interface Props {
   isLoading: boolean
@@ -100,6 +102,24 @@ export const SearchResults = (props: Props): JSX.Element | null => {
           </select>
         </div>
       </div>
+      {
+        results.totalItems > ghMaxResults
+          ? (
+              <div className="row d-flex justify-content-center mb-3">
+                <div className="col-6">
+                  <p className="alert alert-warning text-center">
+                    <MdWarningAmber size={24} />
+                    <span className="ms-2 align-middle">
+                      <span>GitHub REST API provides up to </span>
+                      <strong>1,000 results for each search. </strong>
+                      <span>Please specify your search criteria to obtain fewer results.</span>
+                    </span>
+                  </p>
+                </div>
+              </div>
+            )
+          : null
+      }
       <div className="row">
         {
           results.items.length
