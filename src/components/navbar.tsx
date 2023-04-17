@@ -2,7 +2,7 @@ import React from 'react'
 import { FaGithub } from 'react-icons/fa'
 
 export const Navbar = (): JSX.Element => (
-  <header className="container-fluid py-3 mb-4 border-bottom">
+  <header className="container-fluid bg-light py-3 mb-4 border-bottom">
     <div className="row">
       <div className="col-12 d-flex justify-content-center">
         <a

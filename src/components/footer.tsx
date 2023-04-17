@@ -9,7 +9,7 @@ export const Footer = (): JSX.Element => {
   const rateLimit = sigRateLimit.value
 
   return (
-    <footer className="footer mt-auto py-3 bg-light">
+    <footer className="footer mt-auto py-3 bg-light border-top">
       <section className="container-fluid">
         <div className="row">
           <div

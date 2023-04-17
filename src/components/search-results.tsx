@@ -68,7 +68,6 @@ export const SearchResults = (props: Props): JSX.Element | null => {
 
   return (
     <section className="mt-5">
-      <hr />
       <div className="row mb-4">
         <div className="col-12 col-sm-9 col-md-8">
           <h4>
