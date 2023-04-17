@@ -106,7 +106,7 @@ export const SearchResults = (props: Props): JSX.Element | null => {
         results.totalItems > ghMaxResults
           ? (
               <div className="row d-flex justify-content-center mb-3">
-                <div className="col-6">
+                <div className="col-12 col-xxl-6">
                   <p className="alert alert-warning text-center">
                     <MdWarningAmber size={24} />
                     <span className="ms-2 align-middle">
