@@ -1,6 +1,10 @@
-import React, { StrictMode, Suspense, lazy } from 'react'
+import React, { StrictMode, Suspense } from 'react'
 import { createRoot } from 'react-dom/client'
 import { HelmetProvider, Helmet } from 'react-helmet-async'
+import {
+  createBrowserRouter,
+  RouterProvider
+} from 'react-router-dom'
 
 /** Styles */
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -11,10 +15,16 @@ import './css/util.css'
 
 /** Components */
 import { BlockLoader } from '@root/components/block-loader'
-
-const Home = lazy(async () => import('@root/components/home'))
+import { App } from '@root/components/app'
 
 const root = createRoot(document.getElementById('root') as Element)
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <App />
+  }
+])
 
 root.render(
   (
@@ -30,7 +40,7 @@ root.render(
       </Helmet>
       <Suspense fallback={<BlockLoader />}>
         <StrictMode>
-          <Home />
+          <RouterProvider router={router} />
         </StrictMode>
       </Suspense>
     </HelmetProvider>
