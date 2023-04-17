@@ -1,20 +1,38 @@
 import axios from 'axios'
 import parseLinkHeader from 'parse-link-header'
+import { ApolloClient, InMemoryCache } from '@apollo/client'
 
 /** Root */
-import { ghApiVersion, ghBaseUrl, ghToken } from '@root/const'
+import {
+  ghApiVersion,
+  ghRestUrl,
+  ghGraphQlUrl,
+  ghRestToken,
+  ghGraphToken
+} from '@root/const'
+import { queryUserNodes } from '@root/query/query-user-nodes'
 
 /** Models */
 import { type GithubResultSearch } from '@models/github-result.search.model'
 import { type UserPagination } from '@models/user-pagination.model'
-import { type GithubUserProfile } from '@models/github-user-profile.model'
+import { type GithubUser } from '@models/github-user.model'
+import { type GithubUserRest } from '@models/github-user-rest.model'
 import { FilterResults } from '@models/filter-results.enum'
+import { type RawUser, type ResultRawUserNodes } from '@models/result-raw-user-nodes.model'
 
 const githubClient = axios.create({
-  baseURL: ghBaseUrl,
+  baseURL: ghRestUrl,
   headers: {
     'X-GitHub-Api-Version': ghApiVersion,
-    Authorization: `token ${ghToken}`
+    Authorization: `token ${ghRestToken}`
+  }
+})
+
+const ghGraphQlClient = new ApolloClient({
+  uri: ghGraphQlUrl,
+  cache: new InMemoryCache(),
+  headers: {
+    Authorization: `bearer ${ghGraphToken}`
   }
 })
 
@@ -22,15 +40,16 @@ const buildUserPagination = (
   search: string,
   currentPage: number,
   resultPerPage: number,
-  data: GithubResultSearch,
+  items: GithubUser[],
+  totalItems: number,
   link: string | null
 ): UserPagination => {
   const paginationParsed = parseLinkHeader(link)
   const defaultPagination = {
     search,
     currentPage,
-    totalItems: data.total_count,
-    items: data.items
+    items,
+    totalItems
   }
 
   if (!paginationParsed) {
@@ -53,6 +72,30 @@ const buildUserPagination = (
     ...defaultPagination,
     totalPages: Math.ceil(defaultPagination.totalItems / resultPerPage)
   }
+}
+
+const mapRawUserList = (rawUserList: RawUser[]): GithubUser[] => {
+  return rawUserList
+    .filter((rawUser: RawUser) => Object.keys(rawUser).length > 2)
+    .map(
+      (rawUser: RawUser) => ({
+        avatar_url: rawUser.avatarUrl,
+        bio: rawUser.bio,
+        blog: rawUser.websiteUrl,
+        company: rawUser.company,
+        createdAt: rawUser.createdAt,
+        followers: rawUser.followers.totalCount,
+        following: rawUser.following.totalCount,
+        gists: rawUser.gists.totalCount,
+        hireable: rawUser.isHireable,
+        url: rawUser.url,
+        id: rawUser.databaseId,
+        location: rawUser.location,
+        login: rawUser.login,
+        name: rawUser.name,
+        repos: rawUser.repositories.totalCount
+      })
+    )
 }
 
 export const ghUserSearch = async (
@@ -78,34 +121,25 @@ export const ghUserSearch = async (
       '/search/users',
       { params }
     )
+    const nodeList = data.items.map((mGhUser: GithubUserRest) => mGhUser.node_id)
+    const { data: dataGraphQL } = await ghGraphQlClient.query<ResultRawUserNodes>({
+      query: queryUserNodes,
+      variables: { nodes: nodeList }
+    })
+    const userList = mapRawUserList(dataGraphQL.nodes)
 
     const pagination = buildUserPagination(
       search,
       page,
       resultPerPage,
-      data,
+      userList,
+      data.total_count,
       headers.link
     )
 
     sessionStorage.setItem(stringyfiedParams, JSON.stringify(pagination))
 
     return pagination
-  } catch (error) {
-    return null
-  }
-}
-
-export const ghUserProfile = async (name: string): Promise<GithubUserProfile | null> => {
-  try {
-    if (sessionStorage.getItem(name)) {
-      return JSON.parse(sessionStorage.getItem(name) as string)
-    }
-
-    const { data } = await githubClient.get<GithubUserProfile>(`/users/${name}`)
-
-    sessionStorage.setItem(name, JSON.stringify(data))
-
-    return data
   } catch (error) {
     return null
   }

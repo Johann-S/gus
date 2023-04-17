@@ -1,7 +1,7 @@
-import { type GithubUser } from '@models/github-user.model'
+import { type GithubUserRest } from '@models/github-user-rest.model'
 
 export interface GithubResultSearch {
   incomplete_results: boolean
-  items: GithubUser[]
+  items: GithubUserRest[]
   total_count: number
 }

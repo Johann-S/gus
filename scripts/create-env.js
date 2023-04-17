@@ -5,7 +5,12 @@ const main = () => {
     return
   }
 
-  fs.writeFileSync('./.env', `GH_TOKEN=${process.env.GH_TOKEN}\n`)
+  fs.writeFileSync(
+    './.env',
+    `GH_TOKEN_REST=${process.env.GH_TOKEN_REST}\n
+GH_TOKEN_GRAPHQL=${process.env.GH_TOKEN_GRAPHQL}
+    `
+  )
 }
 
 main()

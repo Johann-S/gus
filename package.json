@@ -21,9 +21,11 @@
   },
   "homepage": "https://github.com/Johann-S/gus#readme",
   "dependencies": {
+    "@apollo/client": "^3.7.12",
     "@preact/signals-react": "^1.3.1",
     "axios": "^1.3.5",
     "bootstrap": "^5.2.3",
+    "graphql": "^16.6.0",
     "parse-link-header": "^2.0.0",
     "react": "^18.2.0",
     "react-bootstrap-typeahead": "^6.1.2",

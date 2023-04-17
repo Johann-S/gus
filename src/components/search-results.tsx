@@ -7,7 +7,7 @@ import {
 } from 'react-icons/fa'
 
 /** Models */
-import { type GithubUser } from '@models/github-user.model'
+import { type GithubUser } from '@models/github-user-rest.model'
 import { type UserPagination } from '@models/user-pagination.model'
 import { FilterResults } from '@models/filter-results.enum'
 
