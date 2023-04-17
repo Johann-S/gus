@@ -1,4 +1,4 @@
-import { type GithubUser } from './github-user-rest.model'
+import { type GithubUser } from './github-user.model'
 
 export interface UserPagination {
   search: string

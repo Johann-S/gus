@@ -10,7 +10,10 @@ import {
   ghRestToken,
   ghGraphToken
 } from '@root/const'
+
+/** Queries */
 import { queryUserNodes } from '@root/query/query-user-nodes'
+import { queryUserByLogin } from '@root/query/query-user-by-login'
 
 /** Models */
 import { type GithubResultSearch } from '@models/github-result.search.model'
@@ -19,6 +22,7 @@ import { type GithubUser } from '@models/github-user.model'
 import { type GithubUserRest } from '@models/github-user-rest.model'
 import { type RawUser, type ResultRawUserNodes } from '@models/result-raw-user-nodes.model'
 import { type RateLimit } from '@models/rate-limit.model'
+import { type RawUserProfile, type ResultRawUserProfile } from '@models/result-raw-user-profile.model'
 import { FilterResults } from '@models/filter-results.enum'
 
 /** Signals */
@@ -157,5 +161,22 @@ export const ghRateLimit = async (): Promise<void> => {
     sigRateLimit.value = data
   } catch (error) {
     console.log(error)
+  }
+}
+
+export const ghUserProfile = async (login: string): Promise<RawUserProfile | null> => {
+  try {
+    const { data } = await ghGraphQlClient.query<ResultRawUserProfile>({
+      query: queryUserByLogin,
+      variables: { login }
+    })
+
+    void ghRateLimit()
+
+    return data.user
+  } catch (error) {
+    console.error(error)
+
+    return null
   }
 }

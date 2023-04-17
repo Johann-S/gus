@@ -1,10 +1,21 @@
-import React, { Suspense, lazy } from 'react'
-import { BlockLoader } from './block-loader'
-import { Route, Routes } from 'react-router-dom'
+import React, { Suspense, lazy, useEffect } from 'react'
+import { Navigate, Route, Routes } from 'react-router-dom'
 
-const Home = lazy(async () => import('@root/components/home'))
+/** Components */
+import { BlockLoader } from '@root/components/block-loader'
+
+/** Root */
+import { ghRateLimit } from '@root/gh-helper'
+
+const Home = lazy(async () => import('@root/pages/home'))
+const Profile = lazy(async () => import('@root/pages/profile'))
 
 export const App = (): JSX.Element => {
+  useEffect(
+    () => { void ghRateLimit() },
+    []
+  )
+
   return (
     <Suspense
       fallback={
@@ -14,7 +25,11 @@ export const App = (): JSX.Element => {
       }
     >
       <Routes>
-        <Route path="/" Component={Home} />
+        <Route path="/">
+          <Route index element={<Home />} />
+          <Route path="profile/:login" element={<Profile />} />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Route>
       </Routes>
     </Suspense>
   )

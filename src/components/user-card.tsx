@@ -2,6 +2,7 @@ import React from 'react'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 import { FaGithub, FaLink } from 'react-icons/fa'
 import { MdOutlineLocationOn } from 'react-icons/md'
+import { Link } from 'react-router-dom'
 
 /** Models */
 import { type GithubUser } from '@models/github-user.model'
@@ -106,6 +107,16 @@ export const UserCard = ({ user }: Props): JSX.Element => (
         </div>
         <div className="col-8 flex-grow-1 ms-3">
           {renderUserData(user)}
+        </div>
+      </div>
+      <div className="card-footer row">
+        <div className="col-12 d-flex flex-row-reverse">
+          <Link
+            to={`/profile/${user.login}`}
+            className="btn btn-secondary btn-sm"
+          >
+            See more
+          </Link>
         </div>
       </div>
     </div>
