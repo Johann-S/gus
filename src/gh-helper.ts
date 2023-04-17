@@ -21,7 +21,9 @@ const githubClient = axios.create({
 const buildUserPagination = (
   search: string,
   currentPage: number,
-  data: GithubResultSearch, link: string | null
+  resultPerPage: number,
+  data: GithubResultSearch,
+  link: string | null
 ): UserPagination => {
   const paginationParsed = parseLinkHeader(link)
   const defaultPagination = {
@@ -49,7 +51,7 @@ const buildUserPagination = (
 
   return {
     ...defaultPagination,
-    totalPages: Number(last.page)
+    totalPages: Math.ceil(defaultPagination.totalItems / resultPerPage)
   }
 }
 
@@ -80,6 +82,7 @@ export const ghUserSearch = async (
     const pagination = buildUserPagination(
       search,
       page,
+      resultPerPage,
       data,
       headers.link
     )
