@@ -138,6 +138,7 @@ module.exports = async (env, args) => {
         ],
         safelist: [
           /^svg/,
+          /^img/,
           /^dropdown/,
           /^form/,
           /^visually-/,

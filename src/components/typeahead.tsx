@@ -40,6 +40,7 @@ export const Typeahead = (props: Props): JSX.Element => {
               placeholder="Search for a Github user, e.g. Johann-S"
               options={sigCacheSearch.value}
               labelKey="q"
+              onChange={() => {}}
               onKeyDown={(ev: KeyboardEvent<HTMLInputElement>) => {
                 if (ev.key === 'Enter') {
                   search(searchStr, 1)
