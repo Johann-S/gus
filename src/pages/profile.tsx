@@ -61,7 +61,7 @@ const Profile = (): JSX.Element => {
   return (
     <>
       <Helmet title={ghUser ? `${ghUser.login} profile - GUS` : undefined} />
-      <div className="container mt-3">
+      <div className="container-fluid mt-3">
         <section className="row mb-3">
           <div className="col-12">
             <button
@@ -74,8 +74,10 @@ const Profile = (): JSX.Element => {
             </button>
           </div>
         </section>
+      </div>
+      <div className="container mt-3">
         <section className="row">
-          <div className="col-3">
+          <div className="col-12 col-sm-3">
             <LazyLoadImage
               alt={ghUser?.login}
               src={ghUser?.avatarUrl}
@@ -84,7 +86,7 @@ const Profile = (): JSX.Element => {
               effect="blur"
             />
           </div>
-          <div className="col-9 d-flex align-items-start flex-column">
+          <div className="col-12 col-sm-9 d-flex align-items-start flex-column">
             <section>
               <h3 className="mb-0">{ghUser?.name}</h3>
               <a

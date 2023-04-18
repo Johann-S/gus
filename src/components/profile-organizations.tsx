@@ -1,6 +1,7 @@
 import React from 'react'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 import { RiOrganizationChart } from 'react-icons/ri'
+import cx from 'classnames'
 
 /** Models */
 import { type RawOrganization } from '@models/result-raw-user-profile.model'
@@ -21,7 +22,17 @@ export const ProfileOrganizations = ({ organizations }: Props): JSX.Element => (
       <div className="row">
         {
           organizations.map((mOrganization: RawOrganization) => (
-            <div key={mOrganization.databaseId} className="col-2">
+            <div
+              key={mOrganization.databaseId}
+              className={cx(
+                'col-6',
+                'col-md-4',
+                'col-xl-3',
+                'col-xxl-2',
+                'mt-2',
+                'mt-xl-0'
+              )}
+            >
               <a
                 className="text-decoration-none"
                 href={mOrganization.url}
