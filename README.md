@@ -34,3 +34,5 @@ The application now uses the REST API search route and GraphQL API to load profi
 
 - Improve the current profile page to add more data (contributions map, list of contributions)
 - Add a way to browse repositories, followers, and followed accounts.
+- Localization
+- Better error handler
