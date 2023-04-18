@@ -29,7 +29,7 @@ export const Footer = (): JSX.Element => {
               )}
             >
               <a
-                href="https://github.com/Johann-S/gus/tree/main"
+                href="https://github.com/Johann-S/gus"
                 className="text-decoration-none"
                 target="_blank"
                 rel="noreferrer"
