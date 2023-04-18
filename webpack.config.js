@@ -109,7 +109,8 @@ module.exports = async (env, args) => {
       new NodePolyfillPlugin()
     ],
     performance: {
-      maxEntrypointSize: 262000
+      maxAssetSize: 512000,
+      maxEntrypointSize: 1024000
     }
   }
 
