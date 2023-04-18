@@ -19,3 +19,7 @@ export const updateCacheSearch = (lastSearch: SearchData): void => {
   updateArr.push(lastSearch)
   sigCacheSearch.value = updateArr
 }
+
+export const getUniqSearchLabels = (): string[] => {
+  return Array.from(new Set(sigCacheSearch.value.map((searchData: SearchData) => searchData.q)))
+}

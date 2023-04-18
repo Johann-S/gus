@@ -4,7 +4,7 @@ import { FcSearch } from 'react-icons/fc'
 import { FaHistory } from 'react-icons/fa'
 
 /** Root */
-import { sigCacheSearch } from '@root/signals/cache-search.signal'
+import { getUniqSearchLabels, sigCacheSearch } from '@root/signals/cache-search.signal'
 
 /** Models */
 import { type SearchData } from '@models/search-data.model'
@@ -29,8 +29,10 @@ export const Typeahead = (props: Props): JSX.Element => {
               selected={
                 sigCacheSearch.value.some((sSearchData: SearchData) => sSearchData.q === searchStr)
                   ? [
-                      sigCacheSearch.value
-                        .find((fSearchData: SearchData) => fSearchData.q === searchStr) as SearchData
+                      (
+                        sigCacheSearch.value
+                          .find((fSearchData: SearchData) => fSearchData.q === searchStr) as SearchData
+                      ).q
                     ]
                   : []
               }
@@ -38,8 +40,7 @@ export const Typeahead = (props: Props): JSX.Element => {
               isLoading={isLoading}
               minLength={2}
               placeholder="Search for a Github user, e.g. Johann-S"
-              options={sigCacheSearch.value}
-              labelKey="q"
+              options={getUniqSearchLabels()}
               onChange={() => {}}
               onKeyDown={(ev: KeyboardEvent<HTMLInputElement>) => {
                 if (ev.key === 'Enter') {
@@ -50,11 +51,11 @@ export const Typeahead = (props: Props): JSX.Element => {
               renderMenuItemChildren={(option: any) => (
                 <div
                   key={`key-${option as string}`}
-                  onClick={() => { setSearchStr((option as SearchData).q) }}
+                  onClick={() => { setSearchStr(option as string) }}
                   className="text-muted"
                 >
                   <FaHistory />
-                  <span className="align-middle ms-2">{(option as SearchData).q}</span>
+                  <span className="align-middle ms-2">{option as string}</span>
                 </div>
               )}
             />
