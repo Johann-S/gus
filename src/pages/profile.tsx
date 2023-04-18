@@ -12,13 +12,13 @@ import { type RawUserProfile } from '@models/result-raw-user-profile.model'
 import { Footer } from '@root/components/footer'
 import { BlockLoader } from '@root/components/block-loader'
 import { ProfileOrganizations } from '@root/components/profile-organizations'
+import { ProfilePinnedRepositories } from '@root/components/profile-pinned-repositories'
 
 /** Root */
 import { ghUserProfile } from '@root/gh-helper'
 
 /** Styles */
 import '@root/css/profile.css'
-import { ProfilePinnedRepositories } from '@root/components/profile-pinned-repositories'
 
 const Profile = (): JSX.Element => {
   const { login } = useParams()

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 /** Root */
 import { ghUserSearch } from '@root/gh-helper'
@@ -9,13 +9,15 @@ import { SearchResults } from '@root/components/search-results'
 
 /** Models */
 import { type UserPagination } from '@models/user-pagination.model'
+import { type SearchData } from '@models/search-data.model'
 import { FilterResults } from '@models/filter-results.enum'
 
 /** Signals */
-import { sigCacheSearch, updateCacheSearch } from '@root/signals/cache-search.signal'
+import { sigCacheSearch } from '@root/signals/cache-search.signal'
 
 export const Search = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState(false)
+  const [searchStr, setSearchStr] = useState('')
   const [totalDisplay, setTotalDisplay] = useState(20)
   const [filterResults, setFilterResults] = useState(FilterResults.BestMatch as string)
   const [results, setResults] = useState(
@@ -31,7 +33,6 @@ export const Search = (): JSX.Element => {
     const result = await ghUserSearch(str, page, totalItems, filter)
 
     if (result) {
-      updateCacheSearch(str)
       setResults(result)
     }
 
@@ -40,10 +41,35 @@ export const Search = (): JSX.Element => {
     return result
   }
 
+  useEffect(
+    () => {
+      const lastSearch = [...sigCacheSearch.value].pop()
+
+      if (!lastSearch) {
+        return
+      }
+
+      const filter = lastSearch.sort ? lastSearch.sort : FilterResults.BestMatch
+
+      setTotalDisplay(lastSearch.per_page)
+      setFilterResults(filter)
+      setSearchStr(lastSearch.q)
+      void searchFn(
+        lastSearch.q,
+        lastSearch.page,
+        lastSearch.per_page,
+        filter
+      )
+    },
+    []
+  )
+
   return (
     <div className="container-fluid">
       <Typeahead
         isLoading={isLoading}
+        searchStr={searchStr}
+        setSearchStr={(newSearch: string) => { setSearchStr(newSearch) }}
         search={(searchStr: string, page: number) => { void searchFn(searchStr, page) }}
       />
       <SearchResults
@@ -54,11 +80,11 @@ export const Search = (): JSX.Element => {
         search={(searchStr: string, page: number) => { void searchFn(searchStr, page) }}
         setTotalDisplay={(total: number) => {
           setTotalDisplay(total)
-          void searchFn([...sigCacheSearch.value].pop() as string, 1, total)
+          void searchFn(([...sigCacheSearch.value].pop() as SearchData).q, 1, total)
         }}
         setFilterResults={(newFilter: string) => {
           setFilterResults(newFilter)
-          void searchFn([...sigCacheSearch.value].pop() as string, 1, totalDisplay, newFilter)
+          void searchFn(([...sigCacheSearch.value].pop() as SearchData).q, 1, totalDisplay, newFilter)
         }}
       />
     </div>

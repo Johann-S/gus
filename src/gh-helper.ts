@@ -27,6 +27,7 @@ import { FilterResults } from '@models/filter-results.enum'
 
 /** Signals */
 import { sigRateLimit } from '@root/signals/rate-limit.signal'
+import { updateCacheSearch } from './signals/cache-search.signal'
 
 const githubClient = axios.create({
   baseURL: ghRestUrl,
@@ -121,6 +122,8 @@ export const ghUserSearch = async (
     const stringyfiedParams = JSON.stringify(params)
 
     if (sessionStorage.getItem(stringyfiedParams)) {
+      updateCacheSearch(params)
+
       return JSON.parse(sessionStorage.getItem(stringyfiedParams) as string)
     }
 
@@ -143,6 +146,7 @@ export const ghUserSearch = async (
       headers.link
     )
 
+    updateCacheSearch(params)
     sessionStorage.setItem(stringyfiedParams, JSON.stringify(pagination))
     void ghRateLimit()
 

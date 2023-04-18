@@ -1,12 +1,17 @@
 import { signal } from '@preact/signals-react'
 
-export const sigCacheSearch = signal<string[]>([])
+/** Models */
+import { type SearchData } from '@models/search-data.model'
 
-export const updateCacheSearch = (lastSearch: string): void => {
+export const sigCacheSearch = signal<SearchData[]>([])
+
+export const updateCacheSearch = (lastSearch: SearchData): void => {
   const updateArr = [...sigCacheSearch.value]
+  const stringCacheSearchArr = sigCacheSearch.value.map((mSearchData: SearchData) => JSON.stringify(mSearchData))
+  const stringLastSearch = JSON.stringify(lastSearch)
 
-  if (updateArr.includes(lastSearch)) {
-    const indexSearch = updateArr.indexOf(lastSearch)
+  if (stringCacheSearchArr.includes(stringLastSearch)) {
+    const indexSearch = stringCacheSearchArr.indexOf(stringLastSearch)
 
     updateArr.splice(indexSearch, 1)
   }
